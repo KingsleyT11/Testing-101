@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<section>
+  <h2>Repairs</h2>
+  <form method="post" action="/repairs" class="card">
+    <div>
+      <label>Customer</label>
+      <select name="customer_id" required>
+        <option value="" disabled selected>Select customer</option>
+        {% for c in customers %}
+          <option value="{{ c.id }}">{{ c.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label>Device Type</label>
+      <input type="text" name="device_type" required />
+    </div>
+    <div>
+      <label>Repair Type</label>
+      <input type="text" name="repair_type" required />
+    </div>
+    <div>
+      <label>Price</label>
+      <input type="number" name="price" step="0.01" required />
+    </div>
+    <div>
+      <label>Received Date</label>
+      <input type="date" name="received_date" />
+    </div>
+    <div>
+      <label>Completed Date</label>
+      <input type="date" name="completed_date" />
+    </div>
+    <div>
+      <label>Notes</label>
+      <textarea name="notes"></textarea>
+    </div>
+    <button type="submit">Add Repair</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Customer</th>
+        <th>Device</th>
+        <th>Repair</th>
+        <th>Price</th>
+        <th>Received</th>
+        <th>Completed</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in repairs %}
+      <tr>
+        <td>{{ r.customer.name if r.customer else r.customer_id }}</td>
+        <td>{{ r.device_type }}</td>
+        <td>{{ r.repair_type }}</td>
+        <td>${{ '%.2f'|format(r.price) }}</td>
+        <td>{{ (r.received_date or '').strftime('%Y-%m-%d') if r.received_date else '-' }}</td>
+        <td>{{ (r.completed_date or '').strftime('%Y-%m-%d') if r.completed_date else '-' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
